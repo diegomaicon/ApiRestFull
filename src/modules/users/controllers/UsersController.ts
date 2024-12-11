@@ -17,11 +17,11 @@ export default class ProductsController {
 
     const createUser = new CreateUserService();
 
-     const user = await createUser.execute({
+    const user = await createUser.execute({
        name,
        email,
        password
-     });
+    });
 
     return response.json(user);
    }
