@@ -37,6 +37,8 @@ class ResetPasswordServide {
 
     user.password = await hash(password, 8);
 
+    await userRepository.save(user);
+
   }
 }
 export default ResetPasswordServide
