@@ -2,15 +2,16 @@ import { Any, getCustomRepository } from "typeorm";
 import ProductRepository  from "../typeorm/repositories/ProductsRepository";
 import AppError from "@shared/errors/AppError";
 import Product from "../typeorm/entities/Protuct";
+import RedisCache from "@shared/cache/RedisCache";
 
 interface IRequest {
   name: string;
   price: number;
   quantity: number;
 }
-
 class CreateProductService {
-  public async execute({ name, price, quantity}: IRequest): Promise<Product> {
+  public async execute({ name, price, quantity }: IRequest): Promise<Product> {
+    const redisCache = new RedisCache();
     const productRepository = getCustomRepository(ProductRepository);
     const productExist = await productRepository.findByName(name);
     if (productExist) {
@@ -20,6 +21,7 @@ class CreateProductService {
         name,price,quantity
     });
 
+    await redisCache.invalidate(process.env.REDIS_PRODUCT_KEY as string);
     await productRepository.save(product);
 
     return product;
