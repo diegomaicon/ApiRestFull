@@ -11,7 +11,7 @@ interface IRequest {
 }
 class CreateProductService {
   public async execute({ name, price, quantity }: IRequest): Promise<Product> {
-    const redisCache = new RedisCache();
+    const redisCache = RedisCache;
     const productRepository = getCustomRepository(ProductRepository);
     const productExist = await productRepository.findByName(name);
     if (productExist) {

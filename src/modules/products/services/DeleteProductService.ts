@@ -8,7 +8,7 @@ interface IRequest {
 class DeleteProductService {
   public async execute({ id }:IRequest): Promise<void> {
     const productRepository = getCustomRepository(ProductRepository);
-    const redisCache = new RedisCache();
+    const redisCache = RedisCache;
 
     const product = await productRepository.findOne(id);
 

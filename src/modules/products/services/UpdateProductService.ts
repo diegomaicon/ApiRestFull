@@ -12,7 +12,7 @@ interface IRequest {
 class UpdateProductService {
   public async execute({ id, name, price, quantity }:IRequest): Promise<Product> {
     const productRepository = getCustomRepository(ProductRepository);
-    const redisCache = new RedisCache();
+    const redisCache = RedisCache;
     const product = await productRepository.findOne(id);
 
     if (!product) {

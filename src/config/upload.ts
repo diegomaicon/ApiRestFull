@@ -1,19 +1,42 @@
-import path from "path"
-import multer from "multer"
-import crypto from "crypto"
+import path from 'path'
+import multer, { StorageEngine } from 'multer'
+
+
+interface IUploadConfig {
+  driver: 's3' | 'disk'
+  tmpFolder: string;
+  directory: string;
+  multer: {
+    storage: StorageEngine;
+  };
+  config: {
+    aws: {
+      bucket: string;
+    };
+  };
+}
 
 const uploadFolder = path.resolve(__dirname, '..', '..', 'uploads');
+const tmpFolder = path.resolve(__dirname, '..', '..', 'temp');
 
 export default {
-    directory: uploadFolder,
+  driver: process.env.STORAGE_DRIVER,
+  directory: uploadFolder,
+  tmpFolder: tmpFolder,
+  multer: {
     storage: multer.diskStorage({
-      destination: uploadFolder,
+      destination: tmpFolder,
       filename(request, file, callback) {
-        const fileHash = crypto.randomBytes(10).toString('hex');
 
-        const fileName = `${fileHash}-${file.originalname}`;
+        const filename = `${request.user.id}_avatar.jpg`;
 
-        callback(null, fileName);
-      }
-    })
-}
+        callback(null, filename);
+      },
+    }),
+  },
+  config: {
+    aws: {
+      bucket: 'dsmdeveloper-api-vendas',
+    },
+  },
+} as IUploadConfig;

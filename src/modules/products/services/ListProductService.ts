@@ -6,7 +6,7 @@ import RedisCache from "@shared/cache/RedisCache";
 class ListProductService {
   public async execute(): Promise<Product[]> {
     const productRepository = getCustomRepository(ProductRepository);
-    const redisCache = new RedisCache();
+    const redisCache = RedisCache;
     let products = await redisCache.recover<Product[]>(process.env.REDIS_PRODUCT_KEY as string);
 
     if (!products) {
